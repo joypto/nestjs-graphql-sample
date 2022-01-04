@@ -23,6 +23,6 @@ const jwtConfig = config.get('jwt');
     PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forFeature([UserRepository]),
   ],
-  exports: [JwtStrategy, PassportModule]
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
