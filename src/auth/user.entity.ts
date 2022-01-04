@@ -15,4 +15,11 @@ export class User extends BaseEntity {
 
     @OneToMany(type => Board, board => board.user, { eager: true })
     boards: Board[];
+
+    constructor(username: string, password: string, boards: Board[]) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.boards = boards;
+    }
 }

@@ -9,7 +9,7 @@ import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
 @Controller('boards')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class BoardsController {
     private readonly logger = new Logger('BoardController');
     constructor(private boardsSerivce: BoardsService) {}
@@ -53,7 +53,7 @@ export class BoardsController {
     deleteBoard(
         @GetUser() user: User,
         @Param('id') id: number
-        ): Promise<void> {
+        ): Promise<Object> {
         return this.boardsSerivce.deleteBoard(user, id);
     }
 }
