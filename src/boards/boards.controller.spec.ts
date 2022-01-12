@@ -103,10 +103,12 @@ describe('BoardsController', () => {
     });
 
     describe('deleteBoard', () => {
-        const existedId: number = 1;
-        const noExistedId: number = 2;
-        let user: User = new User( 'joychae', '1234', []);
+        let user: User;
+        beforeEach(async() => {
+            user = new User( 'joychae', '1234', []);
+        });
         it('should return that it deleted a board', async() => {
+            const existedId: number = 1;
             const board: Board = new Board('제목', '내용', BoardStatus.PUBLIC, user);
             user.boards.push(board);
 
@@ -115,6 +117,7 @@ describe('BoardsController', () => {
             });
         });
         it('should return that it did not deleted a board', async() => {
+            const noExistedId: number = 2;
             const deleteSpy = jest.spyOn(service, 'deleteBoard').mockResolvedValueOnce({ deleted: false });
             await expect(controller.deleteBoard(user, noExistedId)).resolves.toEqual({
                 deleted: false,
