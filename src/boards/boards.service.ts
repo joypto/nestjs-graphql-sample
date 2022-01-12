@@ -5,12 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './boards.entity';
 import { BoardStatus } from './boards.status';
 import { User } from 'src/auth/user.entity';
-import { userInfo } from 'os';
 
 @Injectable()
 export class BoardsService {
     constructor(
-        @InjectRepository(BoardsRepository)
+        @InjectRepository(Board)
         private boardsRepository: BoardsRepository
     ) {}
 
