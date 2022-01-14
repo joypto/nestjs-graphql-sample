@@ -9,7 +9,7 @@ import { User } from 'src/auth/user.entity';
 @Injectable()
 export class BoardsService {
     constructor(
-        @InjectRepository(Board)
+        @InjectRepository(BoardsRepository)
         private boardsRepository: BoardsRepository
     ) {}
 
@@ -46,12 +46,16 @@ export class BoardsService {
         return board;
     }
 
-    async deleteBoard(user: User, id: number): Promise<Object> {
+    async deleteBoard(user: User, id: number): Promise<Boolean> {
         try {
             const result = await this.boardsRepository.delete({id, user});
-            return { deleted: true };
+
+            if (result.affected === 0) {
+                throw new NotFoundException(`Can't find Board with id = ${id}, userId = ${user.id}`);
+            }
+            return true;
         } catch(error) {
-            return { deleted: false, message: error.message}
+            return false;
         }
     }
 }
