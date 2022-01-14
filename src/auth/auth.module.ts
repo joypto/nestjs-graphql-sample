@@ -7,14 +7,14 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserRepository } from './user.repository';
 import * as config from 'config';
-import { User } from './user.entity';
 import { GqlAuthGuard } from './auth.gql-guard';
+import { AuthResolver } from './auth.resolver';
 
 const jwtConfig = config.get('jwt');
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GqlAuthGuard],
+  providers: [AuthService, JwtStrategy, GqlAuthGuard, AuthResolver],
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET || jwtConfig.secret,

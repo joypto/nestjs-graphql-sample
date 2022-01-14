@@ -6,7 +6,8 @@ import * as bcrypt from "bcryptjs";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async createUser(authCredentialDto: AuthCredentialDto) {
+    
+    async createUser(authCredentialDto: AuthCredentialDto): Promise<User> {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(authCredentialDto.password, salt);
 
@@ -21,5 +22,6 @@ export class UserRepository extends Repository<User> {
                 throw new InternalServerErrorException();
             }
         }
+        return user;
     }
 }

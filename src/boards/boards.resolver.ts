@@ -1,5 +1,5 @@
 import { ParseIntPipe, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { GqlAuthGuard } from 'src/auth/auth.gql-guard';
 import { GqlUser } from 'src/auth/decorator/gql-user.decorator';
 import { User } from 'src/auth/user.entity';
@@ -19,10 +19,8 @@ export class BoardsResolver {
         @Args('title') title: string,
         @Args('description') description: string
     ) {
-        console.log(user);
-        const dto = new CreateBoardDto(title, description);
-        console.log(dto);
-        return this.boardsService.createBoard(user, dto);
+        const createBoardDto: CreateBoardDto = { title, description };
+        return this.boardsService.createBoard(user, createBoardDto);
     }
 
     @Query()
