@@ -13,13 +13,12 @@ export class User extends BaseEntity {
     @Column()
     password: string;
 
-    @OneToMany(type => Board, board => board.user, { eager: true })
+    @OneToMany(type => Board, board => board.user, { eager: false })
     boards: Board[];
 
-    constructor(username: string, password: string, boards: Board[]) {
+    constructor(username: string, password: string) {
         super();
         this.username = username;
         this.password = password;
-        this.boards = boards;
     }
 }

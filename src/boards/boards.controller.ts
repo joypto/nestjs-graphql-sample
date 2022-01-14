@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
-@Controller('boards')
+@Controller('api/boards')
 @UseGuards(AuthGuard('jwt'))
 export class BoardsController {
     private readonly logger = new Logger('BoardController');
@@ -30,9 +30,7 @@ export class BoardsController {
     }
 
     @Get('/me')
-    getAllMyBoards(
-        @GetUser() user: User,
-    ): Promise<Board[]> {
+    getAllMyBoards(@GetUser() user: User): Promise<Board[]> {
         this.logger.verbose(`User ${user.username} trying to get all boards`);
         return this.boardsSerivce.getAllMyBoards(user);
     }
@@ -53,7 +51,7 @@ export class BoardsController {
     deleteBoard(
         @GetUser() user: User,
         @Param('id') id: number
-        ): Promise<Object> {
+        ): Promise<Boolean> {
         return this.boardsSerivce.deleteBoard(user, id);
     }
 }

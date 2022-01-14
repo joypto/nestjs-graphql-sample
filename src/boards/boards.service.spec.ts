@@ -22,12 +22,12 @@ describe('BoardsService', () => {
     let repository: BoardsRepository;
   
     beforeEach(async () => {
-      user = new User('username', '1234', []);
+      user = new User('username', '1234');
       const module: TestingModule = await Test.createTestingModule({
         providers: [
             BoardsService,
             {
-                provide: getRepositoryToken(Board),
+                provide: getRepositoryToken(BoardsRepository),
                 useValue: {
                 find: jest.fn().mockResolvedValue(boards),
                 findOne: jest.fn().mockResolvedValue(board),
@@ -40,7 +40,7 @@ describe('BoardsService', () => {
       }).compile();
   
       service = module.get<BoardsService>(BoardsService);
-      repository = module.get<BoardsRepository>(getRepositoryToken(Board));
+      repository = module.get<BoardsRepository>(getRepositoryToken(BoardsRepository));
     });
   
     it('should be defined', () => {

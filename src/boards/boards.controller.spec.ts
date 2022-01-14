@@ -35,7 +35,7 @@ describe('BoardsController', () => {
                         updateBoardStatus: jest.fn().mockImplementation((id: number, status: BoardStatus) =>
                             Promise.resolve({ id, title: '제목', description: '내용', status }),
                         ),
-                        deleteBoard: jest.fn().mockResolvedValue({ deleted: true }),
+                        deleteBoard: jest.fn().mockResolvedValue(true),
                     }
                 },
             ],
@@ -50,7 +50,7 @@ describe('BoardsController', () => {
     });
 
     describe('createBoard', () => {
-        const user: User = new User( 'joychae', '1234', [] );
+        const user: User = new User( 'joychae', '1234' );
         const dto: CreateBoardDto = { title: '제목', description: '내용'};
         it('should return a new board', async() => { 
             await expect(controller.createBoard(user, dto)).resolves.toEqual({
@@ -73,9 +73,8 @@ describe('BoardsController', () => {
 
     describe('getAllMyBoards', () => {    
         it('should return all boards written by specific user', async() => {
-            let user: User = new User( 'joychae', '1234', []);
+            let user: User = new User( 'joychae', '1234');
             const board: Board = new Board('제목', '내용', BoardStatus.PUBLIC, user);
-            user.boards.push(board);
 
             await expect(controller.getAllMyBoards(user)).resolves.toEqual([
                 { id: 1, title: '제목', description: '내용', status: BoardStatus.PUBLIC },
@@ -105,23 +104,18 @@ describe('BoardsController', () => {
     describe('deleteBoard', () => {
         let user: User;
         beforeEach(async() => {
-            user = new User( 'joychae', '1234', []);
+            user = new User( 'joychae', '1234');
         });
         it('should return that it deleted a board', async() => {
             const existedId: number = 1;
             const board: Board = new Board('제목', '내용', BoardStatus.PUBLIC, user);
-            user.boards.push(board);
 
-            await expect(controller.deleteBoard(user, existedId)).resolves.toEqual({
-                deleted: true,
-            });
+            await expect(controller.deleteBoard(user, existedId)).resolves.toEqual(true);
         });
         it('should return that it did not deleted a board', async() => {
             const noExistedId: number = 2;
-            const deleteSpy = jest.spyOn(service, 'deleteBoard').mockResolvedValueOnce({ deleted: false });
-            await expect(controller.deleteBoard(user, noExistedId)).resolves.toEqual({
-                deleted: false,
-            });
+            const deleteSpy = jest.spyOn(service, 'deleteBoard').mockResolvedValueOnce(false);
+            await expect(controller.deleteBoard(user, noExistedId)).resolves.toEqual(false);
         })
     })
 });

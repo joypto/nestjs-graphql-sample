@@ -1,0 +1,29 @@
+type User {
+    id: ID
+    username: String
+}
+
+type Board {
+    id: ID
+    title: String
+    description: String
+    status: BoardStatus
+    user: User
+}
+
+enum BoardStatus {
+    PUBLIC,
+    PRIVATE,
+}
+
+type Query {
+    getAllBoards: [Board]
+    getAllMyBoards: [Board]
+    getBoardById(id: ID!): Board
+}
+
+type Mutation {
+    createBoard(title: String!, description: String!): Board
+    updateBoardStatus(id: ID!, status: BoardStatus!): Board
+    deleteBoard(id: ID!): Boolean
+}

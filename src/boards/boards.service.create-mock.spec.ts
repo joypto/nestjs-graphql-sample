@@ -13,13 +13,13 @@ describe('BoardsService using createMock with DI', () => {
         const module = await Test.createTestingModule({
             providers: [
                 {
-                    provide: getRepositoryToken(Board),
+                    provide: getRepositoryToken(BoardsRepository),
                     useValue: createMock<BoardsRepository>(),
                 },
             ],
         }).compile();
 
-        repository = module.get<BoardsRepository>(getRepositoryToken(Board));
+        repository = module.get<BoardsRepository>(getRepositoryToken(BoardsRepository));
     })
 
     it('should repository mocked', () => {
@@ -33,7 +33,7 @@ describe('BoardsService using createMock with DI', () => {
             await Test.createTestingModule({
                 providers: [
                     {
-                        provide: getRepositoryToken(Board),
+                        provide: getRepositoryToken(BoardsRepository),
                         useValue: repository,
                     },
                 ],
@@ -41,7 +41,7 @@ describe('BoardsService using createMock with DI', () => {
         });
 
         it('should repository mocked', async() => {
-            const user = new User('username', '1234', []);
+            const user = new User('username', '1234');
             const board = new Board('title', 'description', BoardStatus.PUBLIC, user);
             repository.find.mockResolvedValue([board]);
             expect(await repository.find()).toEqual([board]);
