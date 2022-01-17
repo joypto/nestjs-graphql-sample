@@ -1,6 +1,8 @@
+import { InputType } from "@nestjs/graphql";
 import { IsNotEmpty } from "class-validator";
 
-export class CreateBoardDto {
+@InputType()
+export class CreateBoardInput {
     @IsNotEmpty()
     title: string;
 

@@ -1,5 +1,5 @@
 import { ArgumentMetadata, BadRequestException, PipeTransform } from "@nestjs/common";
-import { BoardStatus } from "../boards.status";
+import { BoardStatus } from "@prisma/client";
 
 export class BoardStatusValidationPipe implements PipeTransform {
     
