@@ -1,56 +1,71 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { BoardsRepository } from './boards.repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Board } from './boards.entity';
-import { BoardStatus } from './boards.status';
-import { User } from 'src/auth/user.entity';
+import { CreateBoardInput } from './dto/create-board.input';
+import { PrismaService } from 'nestjs-prisma';
+import { User, BoardStatus } from '@prisma/client'
 
 @Injectable()
 export class BoardsService {
     constructor(
-        @InjectRepository(BoardsRepository)
-        private boardsRepository: BoardsRepository
+        private readonly prisma: PrismaService
     ) {}
 
-    async createBoard(user: User, createBoardDto: CreateBoardDto): Promise <Board> {
-        return this.boardsRepository.createBoard(user, createBoardDto);
+    async createBoard(user: User, createBoardInput: CreateBoardInput) {
+        const { title, description } = createBoardInput;
+        return this.prisma.board.create({
+            data: {
+                title,
+                description,
+                status: BoardStatus.PUBLIC,
+                userId: user.id,
+            }
+        });
     }
 
-    async getAllBoards(): Promise<Board[]> {
-        return this.boardsRepository.find();
+    async getAllBoards() {
+        return this.prisma.board.findMany();
     }
 
-    async getAllMyBoards(user: User): Promise<Board[]> {
-        const query = this.boardsRepository.createQueryBuilder('board');
-        query.where('board.userId = :userId', {userId: user.id});
-
-        const boards = await query.getMany();
-        return boards;
+    async getAllMyBoards(user: User) {
+        return this.prisma.board.findMany({
+            where: {
+                user,
+            },
+        });
     }
 
-    async getBoardById(id: number): Promise <Board> {
-        const found = await this.boardsRepository.findOne(id);
-
+    async getBoardById(id: number) {
+        const found = await this.prisma.board.findUnique({
+            where: {
+                id,
+            },
+        });
         if (!found) {
             throw new NotFoundException(`Can't find Board with id ${id}`);
         }
-
         return found;
     }
 
-    async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
-        const board = await this.getBoardById(id);
-        board.status = status;
-        await this.boardsRepository.save(board);
+    async updateBoardStatus(id: number, status: BoardStatus) {
+        const board = await this.prisma.board.update({
+            where: {
+                id,
+            },
+            data: {
+                status: BoardStatus.PRIVATE,
+            },
+        });
         return board;
     }
 
-    async deleteBoard(user: User, id: number): Promise<Boolean> {
+    async deleteBoard(user: User, id: number) {
         try {
-            const result = await this.boardsRepository.delete({id, user});
+            const result = await this.prisma.board.delete({
+                where: {
+                    id,
+                },
+            });
 
-            if (result.affected === 0) {
+            if (result == null) {
                 throw new NotFoundException(`Can't find Board with id = ${id}, userId = ${user.id}`);
             }
             return true;

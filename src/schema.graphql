@@ -1,0 +1,37 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Auth {
+  accessToken: String!
+}
+
+input AuthCredentialInput {
+  password: String!
+  username: String!
+}
+
+type Board {
+  description: String!
+  id: ID!
+  status: String!
+  title: String!
+}
+
+type Mutation {
+  createBoard(description: String!, title: String!): Board!
+  deleteBoard(id: Float!): Boolean!
+  signIn(data: AuthCredentialInput!): Auth!
+  signUp(data: AuthCredentialInput!): User!
+  updateBoardStatus(id: Float!, status: String!): Board!
+}
+
+type Query {
+  getAllBoards: [Board!]!
+  getAllMyBoards: [Board!]!
+  getBoardById(id: Float!): Board!
+}
+
+type User {
+  id: ID!
+}
